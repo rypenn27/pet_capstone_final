@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Header, Home } from '.';
 
 import { getSomething } from '../api';
 
