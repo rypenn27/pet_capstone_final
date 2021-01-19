@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
-
-import { getSomething } from '../api';
+import React, { useState, useEffect } from "react";
+import { Header, Home } from ".";
+import { getSomething } from "../api";
 
 const App = () => {
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
     getSomething()
