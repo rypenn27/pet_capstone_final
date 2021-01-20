@@ -1,25 +1,39 @@
 import React, { useState, useEffect } from 'react';
 import { Header, Home } from '.';
 
-import { getSomething } from '../api';
+import { getPets } from '../api';
 
 const App = () => {
-  const [message, setMessage] = useState('');
+  //const [message, setMessage] = useState('');
+  const [pets, setPets] = useState('');
+
+  // useEffect(() => {
+  //   getSomething()
+  //     .then((response) => {
+  //       setMessage(response.message);
+  //     })
+  //     .catch((error) => {
+  //       setMessage(error.message);
+  //     });
+  // });
 
   useEffect(() => {
-    getSomething()
+    getPets()
       .then((response) => {
-        setMessage(response.message);
+        console.log(response);
+        setPets(response);
       })
       .catch((error) => {
-        setMessage(error.message);
+        setPets(error.pets);
       });
-  });
+  }, []);
 
   return (
     <div className='App'>
       <h1>Hello, World!</h1>
-      <h2>{message}</h2>
+      {/* {pets.map((pet) => (
+        <div>{pet.breed}</div>
+      ))} */}
     </div>
   );
 };

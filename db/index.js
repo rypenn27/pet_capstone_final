@@ -34,6 +34,7 @@ async function createPet({ breed, age, gender, color }) {
       [breed, age, gender, color]
     );
     // return new link
+    console.log(petCreated);
     return petCreated;
   } catch (error) {
     throw error;
