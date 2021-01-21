@@ -28,6 +28,7 @@ async function buildTables() {
     console.log('Build tables start');
     await client.query(`CREATE TABLE pets(
       id SERIAL PRIMARY KEY,
+      name varchar (255) NOT NULL,
       breed varchar (255) NOT NULL,
       age INTEGER NOT NULL,
       gender varchar (255) NOT NULL,
@@ -44,18 +45,21 @@ async function createInitialPets() {
     // create useful starting data
     console.log('Attempting to create');
     const petOne = await createPet({
+      name: 'Frenchie',
       breed: 'French Bulldog',
       age: '5',
       gender: 'Female',
       color: 'Brindle',
     });
     const petTwo = await createPet({
+      name: 'Vinnie',
       breed: 'Italian Greyhound',
       age: '2',
       gender: 'Male',
       color: 'Gray',
     });
     const petThree = await createPet({
+      name: 'Maxx',
       breed: 'German Shepherd',
       age: '8',
       gender: 'Female',
