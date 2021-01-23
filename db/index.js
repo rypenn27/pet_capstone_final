@@ -1,16 +1,15 @@
 // Connect to DB
-const { Client } = require('pg');
-require('dotenv').config();
+const { Client } = require("pg");
+require("dotenv").config();
 const { KEY, USER } = process.env;
 
-const DB_NAME = 'pet-adoption';
+const DB_NAME = "pet-adoption";
 const DB_URL =
   process.env.DATABASE_URL ||
   `postgres://${USER}:${KEY}@localhost:5432/${DB_NAME}`;
 
 //Creating the client
 const client = new Client(DB_URL);
-
 // database methods
 async function getPets() {
   try {
@@ -21,25 +20,25 @@ async function getPets() {
   }
 }
 
-async function createPet({ breed, age, gender, color }) {
+async function createPet({ name, breed, age, gender, color }) {
   try {
     const {
       rows: [petCreated],
     } = await client.query(
       `
-    INSERT INTO pets(breed, age, gender, color)
-    VALUES ($1, $2, $3, $4)
-    RETURNING *
-    `,
-      [breed, age, gender, color]
+      INSERT INTO pets(name, breed, age, gender, color)
+      VALUES ($1, $2, $3, $4, $5)
+      RETURNING *
+      `,
+      [name, breed, age, gender, color]
     );
     // return new link
+    console.log(petCreated);
     return petCreated;
   } catch (error) {
     throw error;
   }
 }
-
 // export
 module.exports = {
   client,
