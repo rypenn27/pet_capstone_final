@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 
-import { getSomething } from '../api';
+import { getPets, createPet } from '../api';
 
 const Home = () => {
-  return <></>;
+  return;
 };
 
 export default Home;
