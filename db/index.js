@@ -21,6 +21,15 @@ async function getPets() {
   }
 }
 
+async function getLogin() {
+  try {
+    const { rows } = await client.query(`SELECT * FROM login`);
+    return rows;
+  } catch (error) {
+    throw error;
+  }
+}
+
 async function createPet({ name, breed, age, gender, color }) {
   try {
     const {
@@ -41,10 +50,32 @@ async function createPet({ name, breed, age, gender, color }) {
   }
 }
 
+async function createLogin({ username, orderid }) {
+  try {
+    const {
+      rows: [loginCreated],
+    } = await client.query(
+      `
+    INSERT INTO login(username, orderid)
+    VALUES ($1, $2)
+    RETURNING *
+    `,
+      [username, orderid]
+    );
+    // return new link
+    console.log(loginCreated);
+    return loginCreated;
+  } catch (error) {
+    throw error;
+  }
+}
+
 // export
 module.exports = {
   client,
   getPets,
   createPet,
+  getLogin,
+  createLogin
   // db methods
 };
