@@ -45,7 +45,7 @@ async function createInitialPets() {
     // create useful starting data
     console.log("Attempting to create");
     const petOne = await createPet({
-<<<<<<< HEAD
+
       name: "Frenchie",
       breed: "French Bulldog",
       age: "5",
@@ -744,7 +744,7 @@ async function createInitialPets() {
       name: "Deville",
       gender: "Male",
       color: "White",
-=======
+
       name: 'Frenchie',
       breed: 'French Bulldog',
       age: '5',
@@ -764,7 +764,7 @@ async function createInitialPets() {
       age: '8',
       gender: 'Female',
       color: 'Gold',
->>>>>>> 7222da590f370bebf224b11a76fc289d7dbffba7
+
     });
     const petFour = await createPet({
       breed: 'French Bulldog',
