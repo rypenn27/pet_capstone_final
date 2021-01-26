@@ -1,9 +1,9 @@
 // Connect to DB
-const { Client } = require('pg');
-require('dotenv').config();
+const { Client } = require("pg");
+require("dotenv").config();
 const { KEY, USER } = process.env;
 
-const DB_NAME = 'pet-adoption';
+const DB_NAME = "pet-adoption";
 const DB_URL =
   process.env.DATABASE_URL ||
   `postgres://${USER}:${KEY}@localhost:5432/${DB_NAME}`;
