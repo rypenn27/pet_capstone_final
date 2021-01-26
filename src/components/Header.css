@@ -8,3 +8,12 @@
   color: white;
   font-family: helvetica;
 }
+
+.form-control {
+  width: 50% !important;
+}
+
+img {
+  display: flex;
+  flex-direction: row;
+}

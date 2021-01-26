@@ -5,6 +5,7 @@ const {
   createPet,
   // other db methods
 } = require("./index");
+
 async function dropTables() {
   try {
     console.log("Starting to drop tables");
@@ -16,9 +17,11 @@ async function dropTables() {
     throw error;
   }
 }
+
 async function buildTables() {
   try {
     client.connect();
+
     // drop tables in correct order
     await dropTables();
     // build tables in correct order
@@ -36,27 +39,28 @@ async function buildTables() {
     throw error;
   }
 }
+
 async function createInitialPets() {
   try {
     // create useful starting data
     console.log("Attempting to create");
     const petOne = await createPet({
-      breed: "French Bulldog",
       name: "Frenchie",
+      breed: "French Bulldog",
       age: "5",
       gender: "Female",
       color: "Brindle",
     });
     const petTwo = await createPet({
-      breed: "Italian Greyhound",
       name: "Vinnie",
+      breed: "Italian Greyhound",
       age: "2",
       gender: "Male",
       color: "Gray",
     });
     const petThree = await createPet({
-      breed: "German Shepherd",
       name: "Maxx",
+      breed: "German Shepherd",
       age: "8",
       gender: "Female",
       color: "Gold",
@@ -244,76 +248,75 @@ async function createInitialPets() {
       color: "Brown",
     });
     const petThirty = await createPet({
-      breed: "English Bulldog",
-      age: "8",
-      name: "Macy",
-      gender: "Female",
-      color: "White",
+      breed: "Sheltie",
+      age: "13",
+      name: "Frankie",
+      gender: "Male",
+      color: "Brown",
     });
     const petThirtyOne = await createPet({
-      breed: "Great Dane",
-      age: "3",
-      name: "Coco",
-      gender: "Female",
-      color: "Gray",
+      breed: "Corgi",
+      age: "2",
+      name: "George",
+      gender: "Male",
+      color: "Brown",
     });
     const petThirtyTwo = await createPet({
-      breed: "Poodle",
-      age: "3",
-      name: "Cody",
+      breed: "French Bulldog",
+      age: "10",
+      name: "Gizmo",
       gender: "Male",
-      color: "White",
+      color: "Gray",
     });
     const petThirtyThree = await createPet({
-      breed: "Pitbull",
-      age: "6",
-      name: "Cooper",
+      breed: "Italian Greyhound",
+      age: "12",
+      name: "Gunner",
       gender: "Male",
-      color: "White",
+      color: "Gray",
     });
     const petThirtyFour = await createPet({
-      breed: "Rottweiler",
-      age: "5",
-      name: "Copper",
+      breed: "German Shepherd",
+      age: "6",
+      name: "Gus",
       gender: "Male",
       color: "Brown",
     });
     const petThirtyFive = await createPet({
-      breed: "Pomeranian",
-      age: "8",
-      name: "Dexter",
+      breed: "Collie",
+      age: "2",
+      name: "Hank",
       gender: "Male",
-      color: "White",
+      color: "Brown",
     });
     const petThirtySix = await createPet({
-      breed: "Dobermann",
-      age: "6",
-      name: "Diesel",
+      breed: "Labrador",
+      age: "8",
+      name: "Harley",
       gender: "Male",
       color: "Brown",
     });
     const petThirtySeven = await createPet({
-      breed: "Basset Hound",
-      age: "4",
-      name: "Duke",
+      breed: "Yorkie",
+      age: "9",
+      name: "Henry",
       gender: "Male",
       color: "Brown",
     });
     const petThirtyEight = await createPet({
-      breed: "Irish Setter",
-      age: "10",
-      name: "Elvis",
+      breed: "Terrier",
+      age: "13",
+      name: "Hunter",
       gender: "Male",
       color: "Brown",
     });
     const petThirtyNine = await createPet({
-      breed: "Dalmatian",
-      age: "17",
-      name: "Finn",
+      breed: "English Bulldog",
+      age: "2",
+      name: "Jack",
       gender: "Male",
-      color: "White",
+      color: "Brown",
     });
-
     const petFourty = await createPet({
       breed: "Great Dane",
       age: "7",
@@ -678,7 +681,6 @@ async function createInitialPets() {
       gender: "Male",
       color: "Brown",
     });
-
     const petNinetyTwo = await createPet({
       breed: "German Shepherd",
       age: "3",
@@ -742,6 +744,7 @@ async function createInitialPets() {
       gender: "Male",
       color: "White",
     });
+
     console.log("Great Success!");
     return [petOne, petTwo, petThree];
   } catch (error) {
@@ -749,6 +752,7 @@ async function createInitialPets() {
     throw error;
   }
 }
+
 async function populateInitialData() {
   try {
     console.log("Filling database with initial pet data");
@@ -760,6 +764,7 @@ async function populateInitialData() {
     throw error;
   }
 }
+
 buildTables()
   .then(populateInitialData)
   .catch(console.error)

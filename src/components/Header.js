@@ -1,13 +1,23 @@
 import { Search } from ".";
 import React, { useState, useEffect } from "react";
-
+import PetIcon from "./PetIcon.jpg";
+import PetIcon2 from "./PetIcon2.jpg";
+import PetIcon3 from "./PetIcon3.jpeg";
 import { getSomething } from "../api";
 
-const Header = () => {
+const Header = (props) => {
+  const pets = props.pets;
+  const setPets = props.setPets;
+
   return (
-    <>
-      <Search />
-    </>
+    <header>
+      <h1 className="logo">Pet Rescuers</h1>
+      <h5>Find Your Forever Friend!</h5>
+      <img src={PetIcon} alt="PetIcon" />
+      <img src={PetIcon2} alt="PetIcon2" />
+      <img src={PetIcon3} alt="PetIcon3" />
+      <Search pets={pets} setPets={setPets} />
+    </header>
   );
 };
 

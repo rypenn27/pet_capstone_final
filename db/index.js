@@ -10,6 +10,7 @@ const DB_URL =
 
 //Creating the client
 const client = new Client(DB_URL);
+
 // database methods
 async function getPets() {
   try {
@@ -26,10 +27,10 @@ async function createPet({ name, breed, age, gender, color }) {
       rows: [petCreated],
     } = await client.query(
       `
-      INSERT INTO pets(name, breed, age, gender, color)
-      VALUES ($1, $2, $3, $4, $5)
-      RETURNING *
-      `,
+    INSERT INTO pets(name, breed, age, gender, color)
+    VALUES ($1, $2, $3, $4, $5)
+    RETURNING *
+    `,
       [name, breed, age, gender, color]
     );
     // return new link
@@ -39,6 +40,7 @@ async function createPet({ name, breed, age, gender, color }) {
     throw error;
   }
 }
+
 // export
 module.exports = {
   client,
