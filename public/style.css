@@ -20,3 +20,8 @@ header {
 .card {
   margin: 2% 25%;
 }
+
+.btn-flat {
+  background-color: blueviolet;
+  color: white;
+}
