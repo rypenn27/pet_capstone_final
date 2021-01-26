@@ -41,10 +41,41 @@ async function createPet({ name, breed, age, gender, color }) {
   }
 }
 
+async function getLogInfo() {
+  try {
+    const { rows } = await client.query(`SELECT * FROM login_info`);
+    return rows;
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function createLogInfo({ username, orderNum }) {
+  try {
+    const {
+      rows: [loginCreated],
+    } = await client.query(
+      `
+    INSERT INTO login_info(username, orderNum)
+    VALUES ($1, $2)
+    RETURNING *
+    `,
+      [username, orderNum]
+    );
+    // return new link
+    console.log(loginCreated);
+    return loginCreated;
+  } catch (error) {
+    throw error;
+  }
+}
+
 // export
 module.exports = {
   client,
   getPets,
   createPet,
+  createLogInfo,
+  getLogInfo
   // db methods
 };

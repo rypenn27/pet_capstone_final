@@ -38,14 +38,11 @@ const Home = (props) => {
       color: white;
     }
 
-    .btn-xxl {
-      padding: 1rem 1.5rem;
-      font-size: 1.5rem;
-    }
+  
     `}
             </style>
-            <Button variant="flat" size="xxl">
-              "primary" onClick={async (event) => {}} Adopt Me!
+            <Button variant="flat">
+             Adopt Me!
             </Button>
           </Card.Footer>
         </Card>
