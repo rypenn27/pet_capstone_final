@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
-import "bootstrap/dist/css/bootstrap.min.css";
+import React, { useState, useEffect } from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
-import { Header, Home } from ".";
+import { Header, Home } from '.';
 
 const App = () => {
   const [pets, setPets] = useState([]);

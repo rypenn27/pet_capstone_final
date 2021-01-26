@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from "react";
-import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/Button";
+import React, { useState, useEffect } from 'react';
+import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
 
-import { getPets } from "../api";
+import { getPets } from '../api';
 
 const Search = (props) => {
   const pets = props.pets;
   const setPets = props.setPets;
 
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState('');
   const [copyOfPets, setCopyOfPets] = useState([]);
 
   useEffect(() => {
@@ -30,7 +30,7 @@ const Search = (props) => {
 
       let q = query.toLowerCase();
 
-      if (breed.split(" ").includes(q)) {
+      if (breed.split(' ').includes(q)) {
         filteredPets.push(pet);
         setPets(filteredPets);
       }
@@ -42,22 +42,22 @@ const Search = (props) => {
   return (
     <>
       <Form.Control
-        className="search"
-        type="text"
+        className='search'
+        type='text'
         value={searchQuery}
         onChange={(e) => {
           e.preventDefault();
           setSearchQuery(e.target.value);
-          if (e.target.value === "") {
+          if (e.target.value === '') {
             setPets(copyOfPets);
           }
         }}
-        placeholder="Search Breeds..."
+        placeholder='Search Breeds...'
       />
       <br />
       <Button
-        className="searchButton"
-        variant="primary"
+        className='searchButton'
+        variant='primary'
         onClick={(e) => petFilter(searchQuery)}
       >
         Search
