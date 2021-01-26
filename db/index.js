@@ -21,19 +21,20 @@ async function getPets() {
   }
 }
 
-async function createPet({ breed, age, gender, color }) {
+async function createPet({ name, breed, age, gender, color }) {
   try {
     const {
       rows: [petCreated],
     } = await client.query(
       `
-    INSERT INTO pets(breed, age, gender, color)
-    VALUES ($1, $2, $3, $4)
+    INSERT INTO pets(name, breed, age, gender, color)
+    VALUES ($1, $2, $3, $4, $5)
     RETURNING *
     `,
-      [breed, age, gender, color]
+      [name, breed, age, gender, color]
     );
     // return new link
+    console.log(petCreated);
     return petCreated;
   } catch (error) {
     throw error;

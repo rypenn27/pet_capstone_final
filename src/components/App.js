@@ -1,24 +1,15 @@
 import React, { useState, useEffect } from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
-import { getSomething } from '../api';
+import { Header, Home } from '.';
 
 const App = () => {
-  const [message, setMessage] = useState('');
-
-  useEffect(() => {
-    getSomething()
-      .then((response) => {
-        setMessage(response.message);
-      })
-      .catch((error) => {
-        setMessage(error.message);
-      });
-  });
+  const [pets, setPets] = useState([]);
 
   return (
     <>
-      <Header />
-      <Home />
+      <Header pets={pets} setPets={setPets} />
+      <Home pets={pets} setPets={setPets} />
     </>
   );
 };

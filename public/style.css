@@ -1,0 +1,22 @@
+* {
+  box-sizing: border-box;
+  border: 0;
+  padding: 0;
+  margin: 0;
+}
+
+header {
+  border-bottom: 1px black solid;
+  margin-bottom: 2%;
+  padding: 1%;
+  background-color: #6504b5;
+  color: white;
+}
+
+.logo {
+  font-family: cursive;
+}
+
+.card {
+  margin: 2% 25%;
+}
