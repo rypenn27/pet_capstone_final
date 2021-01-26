@@ -2,7 +2,9 @@ const apiRouter = require("express").Router();
 
 const { getPets } = require("../db");
 
-apiRouter.get("/", (req, res, next) => {
+const { getPets } = require('../db');
+
+apiRouter.get('/', (req, res, next) => {
   res.send({
     message: "API is under construction!",
   });
