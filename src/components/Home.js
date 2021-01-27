@@ -41,9 +41,14 @@ const Home = (props) => {
   
     `}
             </style>
-            <Button variant="flat">
-             Adopt Me!
+
+           
+            <Button styel = 'font-size: 2px' variant="flat">
+             Adopt Me!  <i class ='fas fa-dog'></i>
             </Button>
+           
+
+            
           </Card.Footer>
         </Card>
       ))}

@@ -41,6 +41,7 @@ const Search = (props) => {
 
   return (
     <>
+    <div className = "searching">
       <Form.Control
         className="search"
         type="text"
@@ -62,6 +63,7 @@ const Search = (props) => {
       >
         Search
       </Button>
+      </div>
     </>
   );
 };

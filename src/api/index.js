@@ -9,3 +9,12 @@ export async function getPets() {
     throw error;
   }
 }
+
+export async function getLogInfo() {
+  try {
+    const { data } = await axios.get("/api/logInfo");
+    return data;
+  } catch (error) {
+    throw error;
+  }
+}
