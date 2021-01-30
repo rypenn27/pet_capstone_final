@@ -15,6 +15,10 @@ header {
 
 .logo {
   font-family: cursive;
+  width: 50%;
+}
+.friend {
+  width: 50%;
 }
 
 .card {
@@ -37,31 +41,38 @@ header {
   width: 35% !important;
 }
 
-.images{
-display:flex;
+.images {
+  display: flex;
 }
 
 img {
-  flex:1;
-  width:15px;
+  flex: 1;
+  width: 15px;
   margin-bottom: 15px;
 }
 
-.Home{
+.Home {
   display: flex;
   flex-flow: row wrap;
   justify-content: center;
 }
 
-.searching{
-  display:flex;
+.searching {
+  display: flex;
 }
 
-.searchButton{
+.searchButton {
   margin-left: 10px;
 }
 
+.pawCart {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin-top: 15px;
+  margin-right: 15px;
+}
 
-
-
-
+.loginnn {
+  margin-right: 10px;
+}
