@@ -13,9 +13,11 @@ const Header = (props) => {
     <header>
       <h1 className='logo'>Pet Rescuers</h1>
       <h5>Find Your Forever Friend!</h5>
-      <img src={PetIcon} alt='PetIcon' />
-      <img src={PetIcon2} alt='PetIcon2' />
-      <img src={PetIcon3} alt='PetIcon3' />
+      <div className='images'>
+        <img src={PetIcon} alt='PetIcon' />
+        <img src={PetIcon2} alt='PetIcon2' />
+        <img src={PetIcon3} alt='PetIcon3' />
+      </div>
       <Search pets={pets} setPets={setPets} />
     </header>
   );

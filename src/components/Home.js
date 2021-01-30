@@ -31,8 +31,18 @@ const Home = (props) => {
             <Card.Text>Color: {pet.color}</Card.Text>
           </Card.Body>
           <Card.Footer>
-            <Button variant='flat' onClick={async (event) => {}}>
-              Adopt Me!
+            <style type='text/css'>
+              {`
+    .btn-flat {
+      background-color: blueviolet;
+      color: white;
+    }
+  
+    `}
+            </style>
+
+            <Button styel='font-size: 2px' variant='flat'>
+              Adopt Me! <i class='fas fa-dog'></i>
             </Button>
           </Card.Footer>
         </Card>

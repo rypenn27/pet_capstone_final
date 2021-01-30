@@ -1,5 +1,5 @@
-const passport = require("passport");
-var GoogleStrategy = require("passport-google-oauth20").Strategy;
+const passport = require('passport');
+var GoogleStrategy = require('passport-google-oauth20').Strategy;
 
 passport.serializeUser(function (user, done) {
   done(null, user.id);
@@ -14,9 +14,9 @@ passport.use(
   new GoogleStrategy(
     {
       clientID:
-        "971304540030-vr45mu6r1ldg2qhl5er5h92hopld6fad.apps.googleusercontent.com",
-      clientSecret: "YVlrb8DpKbkqKco1t1AD-UHg",
-      callbackURL: "http://localhost:3000/google/callback",
+        '971304540030-vr45mu6r1ldg2qhl5er5h92hopld6fad.apps.googleusercontent.com',
+      clientSecret: 'YVlrb8DpKbkqKco1t1AD-UHg',
+      callbackURL: 'http://localhost:3000/google/callback',
     },
     function (accessToken, refreshToken, profile, done) {
       //use the profile info (mainly profile id)to check if the user is registerd in your db

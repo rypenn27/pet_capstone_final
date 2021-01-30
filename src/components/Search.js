@@ -41,27 +41,29 @@ const Search = (props) => {
 
   return (
     <>
-      <Form.Control
-        className='search'
-        type='text'
-        value={searchQuery}
-        onChange={(e) => {
-          e.preventDefault();
-          setSearchQuery(e.target.value);
-          if (e.target.value === '') {
-            setPets(copyOfPets);
-          }
-        }}
-        placeholder='Search Breeds...'
-      />
-      <br />
-      <Button
-        className='searchButton'
-        variant='primary'
-        onClick={(e) => petFilter(searchQuery)}
-      >
-        Search
-      </Button>
+      <div className='searching'>
+        <Form.Control
+          className='search'
+          type='text'
+          value={searchQuery}
+          onChange={(e) => {
+            e.preventDefault();
+            setSearchQuery(e.target.value);
+            if (e.target.value === '') {
+              setPets(copyOfPets);
+            }
+          }}
+          placeholder='Search Breeds...'
+        />
+        <br />
+        <Button
+          className='searchButton'
+          variant='primary'
+          onClick={(e) => petFilter(searchQuery)}
+        >
+          Search
+        </Button>
+      </div>
     </>
   );
 };

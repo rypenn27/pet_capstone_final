@@ -3,6 +3,8 @@ const {
   client,
   getPets,
   createPet,
+  getLogInfo,
+  createLogInfo,
   // other db methods
 } = require('./index');
 
@@ -11,6 +13,7 @@ async function dropTables() {
     console.log('Starting to drop tables');
     client.query(`
     DROP TABLE if EXISTS pets;
+    DROP TABLE if EXISTS login_info;
     `);
     console.log('Finished dropping tables');
   } catch (error) {
@@ -33,7 +36,13 @@ async function buildTables() {
       age INTEGER NOT NULL,
       gender varchar (255) NOT NULL,
       color varchar (255) NOT NULL
-    )`);
+    );
+      CREATE TABLE login_info(
+      id SERIAL PRIMARY KEY,
+      username varchar (255),
+      orderNum INTEGER NOT NULL
+    )
+    `);
     console.log('Finished table bulding');
   } catch (error) {
     throw error;
@@ -743,6 +752,12 @@ async function createInitialPets() {
       name: 'Deville',
       gender: 'Male',
       color: 'White',
+
+      name: 'Frenchie',
+      breed: 'French Bulldog',
+      age: '5',
+      gender: 'Female',
+      color: 'Brindle',
     });
 
     console.log('Great Success!');
@@ -753,11 +768,36 @@ async function createInitialPets() {
   }
 }
 
+async function createInitialLogInfo() {
+  try {
+    // create useful starting data
+    console.log('Attempting to create login info');
+    const loginInfoOne = await createLogInfo({
+      username: 'REDLEADER1',
+      orderNum: '175',
+    });
+    const loginInfoTwo = await createLogInfo({
+      username: 'GREENMAN99999',
+      orderNum: '174',
+    });
+    const loginInfoThree = await createLogInfo({
+      username: 'BLUES47555',
+      orderNum: '176',
+    });
+    console.log('Great Success!');
+    return [loginInfoOne, loginInfoTwo, loginInfoThree];
+  } catch (error) {
+    console.error('Error during login creation');
+    throw error;
+  }
+}
+
 async function populateInitialData() {
   try {
     console.log('Filling database with initial pet data');
     await createInitialPets();
-    console.log('Getting all pets: \n', await getPets());
+    await createInitialLogInfo();
+    console.log('Getting all pets: \n');
     console.log('Filled pet database');
     console.log('Finished filling pet database');
   } catch (error) {
