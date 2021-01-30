@@ -33,7 +33,7 @@ const Home = (props) => {
           <Card.Footer>
             <style type='text/css'>
               {`
-    .btn-flat {
+            .btn-flat {
       background-color: blueviolet;
       color: white;
     }
@@ -41,7 +41,12 @@ const Home = (props) => {
             </style>
 
             <Button variant='flat'>
-              Adopt Me! <i class='fas fa-dog'></i>
+              Adopt Me! <i className='fas fa-dog'></i>
+            </Button>
+
+            <Button className='likeBtn' variant='flat'>
+              {' '}
+              ♡{' '}
             </Button>
           </Card.Footer>
         </Card>

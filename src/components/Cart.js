@@ -1,39 +1,36 @@
 import React, { useState, useEffect } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import { getSomething } from '../api';
+// import { getSomething } from '../api';
 
-const Cart = (props) => {
-  const cart = props.cart;
-  const setCart = props.setCart;
-  const showCart = props.showCart;
-  const setShowCart = props.setShowCart;
-  const closeCart = props.closeCart;
-  const setCloseCart = props.setCloseCart;
+const Cart = () => {
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
   return (
     <>
-      <Modal
-        show={show}
-        onHide={setCloseCart}
-        backdrop='static'
-        keyboard={false}
-      >
+      <Button variant='flat' onClick={handleShow}>
+        Basket <i className='fas fa-paw'></i>
+      </Button>
+
+      <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Modal title</Modal.Title>
+          <Modal.Title>Your Basket</Modal.Title>
         </Modal.Header>
-        <Modal.Body>Meet your new family member!</Modal.Body>
+        <Modal.Body>Dog Name and Quantity</Modal.Body>
         <Modal.Footer>
-          <Button variant='flat' onClick={setCloseCart}>
-            Keep Searching!
+          <Button variant='flat' onClick={handleClose}>
+            Keep Looking!
           </Button>
-          <Button variant='flat'>Checkout</Button>
+          <Button variant='flat' onClick={handleClose}>
+            Take Me Home!
+          </Button>
         </Modal.Footer>
       </Modal>
     </>
   );
 };
-
-// render(<Cart />);
 
 export default Cart;

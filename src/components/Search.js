@@ -61,7 +61,7 @@ const Search = (props) => {
           variant='flat'
           onClick={(e) => petFilter(searchQuery)}
         >
-          Search
+          Search <i className='fas fa-paw'></i>
         </Button>
       </div>
     </>
