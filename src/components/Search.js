@@ -40,9 +40,9 @@ const Search = (props) => {
   }
 
   return (
-    <>
+    <div className='searchBar'>
       <Form.Control
-        className='search'
+        className='searchBar'
         type='text'
         value={searchQuery}
         onChange={(e) => {
@@ -62,7 +62,7 @@ const Search = (props) => {
       >
         Search
       </Button>
-    </>
+    </div>
   );
 };
 

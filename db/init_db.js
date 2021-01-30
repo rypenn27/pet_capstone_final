@@ -738,7 +738,7 @@ async function createInitialPets() {
       color: 'Brown',
     });
     const petOneHundred = await createPet({
-      breed: 'Dalmation',
+      breed: 'Dalmatian',
       age: '12',
       name: 'Deville',
       gender: 'Male',
@@ -746,7 +746,6 @@ async function createInitialPets() {
     });
 
     console.log('Great Success!');
-    return [petOne, petTwo, petThree];
   } catch (error) {
     console.error('Error during pet creation');
     throw error;
