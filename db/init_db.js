@@ -3,8 +3,16 @@ const {
   client,
   getPets,
   createPet,
-  getLogInfo,
-  createLogInfo,
+  getUsers,
+  getUserById,
+  getUserByUsername,
+  getPetsById,
+  createUser,
+  getCart,
+  createCart,
+  addToCart,
+  checkout,
+  getRescueOrder,
   // other db methods
 } = require('./index');
 
@@ -13,10 +21,14 @@ async function dropTables() {
     console.log('Starting to drop tables');
     client.query(`
     DROP TABLE if EXISTS pets;
-    DROP TABLE if EXISTS login_info;
+    DROP TABLE if EXISTS "Users" CASCADE;
+    DROP TABLE if EXISTS cart;
+    DROP TABLE if EXISTS RescueOrders;
+
     `);
     console.log('Finished dropping tables');
   } catch (error) {
+    console.error('Error with dropping tables');
     throw error;
   }
 }
@@ -29,19 +41,41 @@ async function buildTables() {
     await dropTables();
     // build tables in correct order
     console.log('Build tables start');
-    await client.query(`CREATE TABLE pets(
+    //product
+    await client.query(`
+    CREATE TABLE pets(
       id SERIAL PRIMARY KEY,
       name varchar (255) NOT NULL,
       breed varchar (255) NOT NULL,
       age INTEGER NOT NULL,
       gender varchar (255) NOT NULL,
-      color varchar (255) NOT NULL
+      color varchar (255) NOT NULL,
+      quantity INTEGER NOT NULL,
+      price DECIMAL NOT NULL,
+      count INTEGER NOT NULL,
+      "available" BOOLEAN
+
     );
-      CREATE TABLE login_info(
+     CREATE TABLE cart (
       id SERIAL PRIMARY KEY,
-      username varchar (255),
-      orderNum INTEGER NOT NULL
-    )
+      "userId" INTEGER REFERENCES "Users"(id),
+      "petId" INTEGER[],
+      status TEXT NOT NULL
+      );
+
+    CREATE TABLE RescueOrders (
+       id SERIAL PRIMARY KEY,
+       "userId" INTEGER REFERENCES "Users"(username),
+       "cartId" INTEGER REFERENCES cart(id)
+);
+
+    CREATE TABLE "Users"(
+      id SERIAL PRIMARY KEY,
+      username varchar (255) NOT NULL UNIQUE,
+      email varchar (255) NOT NULL UNIQUE,
+      role TEXT NOT NULL,
+      password varchar (255) NOT NULL
+    );
     `);
     console.log('Finished table bulding');
   } catch (error) {
@@ -59,6 +93,10 @@ async function createInitialPets() {
       age: '5',
       gender: 'Female',
       color: 'Brindle',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petTwo = await createPet({
       name: 'Vinnie',
@@ -66,6 +104,10 @@ async function createInitialPets() {
       age: '2',
       gender: 'Male',
       color: 'Gray',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petThree = await createPet({
       name: 'Maxx',
@@ -73,6 +115,10 @@ async function createInitialPets() {
       age: '8',
       gender: 'Female',
       color: 'Gold',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petFour = await createPet({
       breed: 'French Bulldog',
@@ -80,6 +126,10 @@ async function createInitialPets() {
       name: 'Ace',
       gender: 'Male',
       color: 'Black',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petFive = await createPet({
       breed: 'Italian Greyhound',
@@ -87,6 +137,10 @@ async function createInitialPets() {
       name: 'Apollo',
       gender: 'Male',
       color: 'Gray',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petSix = await createPet({
       breed: 'German Shepherd',
@@ -94,6 +148,10 @@ async function createInitialPets() {
       name: 'Bailey',
       gender: 'Male',
       color: 'Brown',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petSeven = await createPet({
       breed: 'Collie',
@@ -101,6 +159,10 @@ async function createInitialPets() {
       name: 'Bandit',
       gender: 'Male',
       color: 'Gold',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petEight = await createPet({
       breed: 'Labrador',
@@ -108,6 +170,10 @@ async function createInitialPets() {
       name: 'Baxter',
       gender: 'Male',
       color: 'Black',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petNine = await createPet({
       breed: 'Yorkie',
@@ -115,6 +181,10 @@ async function createInitialPets() {
       name: 'Bear',
       gender: 'Male',
       color: 'Brown',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petTen = await createPet({
       breed: 'Terrier',
@@ -122,6 +192,10 @@ async function createInitialPets() {
       name: 'Beau',
       gender: 'Male',
       color: 'Brown',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petEleven = await createPet({
       breed: 'English Bulldog',
@@ -129,6 +203,10 @@ async function createInitialPets() {
       name: 'Benji',
       gender: 'Male',
       color: 'White',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petTwelve = await createPet({
       breed: 'Great Dane',
@@ -136,6 +214,10 @@ async function createInitialPets() {
       name: 'Benny',
       gender: 'Male',
       color: 'Gray',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petThirteen = await createPet({
       breed: 'Poodle',
@@ -143,6 +225,10 @@ async function createInitialPets() {
       name: 'Izzy',
       gender: 'Female',
       color: 'Black',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petFourteen = await createPet({
       breed: 'Pitbull',
@@ -150,6 +236,10 @@ async function createInitialPets() {
       name: 'Jasmine',
       gender: 'Female',
       color: 'Gray',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petFifteen = await createPet({
       breed: 'Rottweiler',
@@ -157,6 +247,10 @@ async function createInitialPets() {
       name: 'Josie',
       gender: 'Female',
       color: 'Brown',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petSixteen = await createPet({
       breed: 'Pomeranian',
@@ -164,6 +258,10 @@ async function createInitialPets() {
       name: 'Katie',
       gender: 'Female',
       color: 'White',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petSeventeen = await createPet({
       breed: 'Dobermann',
@@ -171,6 +269,10 @@ async function createInitialPets() {
       name: 'Kona',
       gender: 'Female',
       color: 'Brown',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petEighteen = await createPet({
       breed: 'Basset Hound',
@@ -178,6 +280,10 @@ async function createInitialPets() {
       name: 'Lacey',
       gender: 'Female',
       color: 'Brown',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petNineteen = await createPet({
       breed: 'Irish Setter',
@@ -185,6 +291,10 @@ async function createInitialPets() {
       name: 'Lady',
       gender: 'Female',
       color: 'Brown',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petTwenty = await createPet({
       breed: 'Dalmatian',
@@ -192,6 +302,10 @@ async function createInitialPets() {
       name: 'Layla',
       gender: 'Female',
       color: 'White',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petTwentyOne = await createPet({
       breed: 'Sheltie',
@@ -199,6 +313,10 @@ async function createInitialPets() {
       name: 'Lexi',
       gender: 'Female',
       color: 'Brown',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petTwentyTwo = await createPet({
       breed: 'Corgi',
@@ -206,6 +324,10 @@ async function createInitialPets() {
       name: 'Lexie',
       gender: 'Female',
       color: 'Brown',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petTwentyThree = await createPet({
       breed: 'French Bulldog',
@@ -213,6 +335,10 @@ async function createInitialPets() {
       name: 'Lilly',
       gender: 'Female',
       color: 'Gray',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petTwentyFour = await createPet({
       breed: 'Italian Greyhound',
@@ -220,6 +346,10 @@ async function createInitialPets() {
       name: 'Lily',
       gender: 'Female',
       color: 'Gray',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petTwentyFive = await createPet({
       breed: 'German Shepherd',
@@ -227,6 +357,10 @@ async function createInitialPets() {
       name: 'Lola',
       gender: 'Female',
       color: 'Brown',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petTwentySix = await createPet({
       breed: 'Collie',
@@ -234,6 +368,10 @@ async function createInitialPets() {
       name: 'Lucky',
       gender: 'Female',
       color: 'Brown',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petTwentySeven = await createPet({
       breed: 'Labrador',
@@ -241,6 +379,10 @@ async function createInitialPets() {
       name: 'Lucy',
       gender: 'Female',
       color: 'Black',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petTwentyEight = await createPet({
       breed: 'Yorkie',
@@ -248,6 +390,10 @@ async function createInitialPets() {
       name: 'Lulu',
       gender: 'Female',
       color: 'Brown',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petTwentyNine = await createPet({
       breed: 'Terrier',
@@ -255,6 +401,10 @@ async function createInitialPets() {
       name: 'Luna',
       gender: 'Female',
       color: 'Brown',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petThirty = await createPet({
       breed: 'Sheltie',
@@ -262,6 +412,10 @@ async function createInitialPets() {
       name: 'Frankie',
       gender: 'Male',
       color: 'Brown',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petThirtyOne = await createPet({
       breed: 'Corgi',
@@ -269,6 +423,10 @@ async function createInitialPets() {
       name: 'George',
       gender: 'Male',
       color: 'Brown',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petThirtyTwo = await createPet({
       breed: 'French Bulldog',
@@ -276,6 +434,10 @@ async function createInitialPets() {
       name: 'Gizmo',
       gender: 'Male',
       color: 'Gray',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petThirtyThree = await createPet({
       breed: 'Italian Greyhound',
@@ -283,6 +445,10 @@ async function createInitialPets() {
       name: 'Gunner',
       gender: 'Male',
       color: 'Gray',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petThirtyFour = await createPet({
       breed: 'German Shepherd',
@@ -290,6 +456,10 @@ async function createInitialPets() {
       name: 'Gus',
       gender: 'Male',
       color: 'Brown',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petThirtyFive = await createPet({
       breed: 'Collie',
@@ -297,6 +467,10 @@ async function createInitialPets() {
       name: 'Hank',
       gender: 'Male',
       color: 'Brown',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petThirtySix = await createPet({
       breed: 'Labrador',
@@ -304,6 +478,10 @@ async function createInitialPets() {
       name: 'Harley',
       gender: 'Male',
       color: 'Brown',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petThirtySeven = await createPet({
       breed: 'Yorkie',
@@ -311,6 +489,10 @@ async function createInitialPets() {
       name: 'Henry',
       gender: 'Male',
       color: 'Brown',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petThirtyEight = await createPet({
       breed: 'Terrier',
@@ -318,6 +500,10 @@ async function createInitialPets() {
       name: 'Hunter',
       gender: 'Male',
       color: 'Brown',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petThirtyNine = await createPet({
       breed: 'English Bulldog',
@@ -325,6 +511,10 @@ async function createInitialPets() {
       name: 'Jack',
       gender: 'Male',
       color: 'Brown',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petFourty = await createPet({
       breed: 'Great Dane',
@@ -332,6 +522,10 @@ async function createInitialPets() {
       name: 'Jackson',
       gender: 'Male',
       color: 'Gray',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petFourtyOne = await createPet({
       breed: 'Poodle',
@@ -339,6 +533,10 @@ async function createInitialPets() {
       name: 'Jake',
       gender: 'Male',
       color: 'White',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petFourtyTwo = await createPet({
       breed: 'Pitbull',
@@ -346,6 +544,10 @@ async function createInitialPets() {
       name: 'Molly',
       gender: 'Female',
       color: 'Brown',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petFourtyThree = await createPet({
       breed: 'Rottweiler',
@@ -353,6 +555,10 @@ async function createInitialPets() {
       name: 'Nala',
       gender: 'Female',
       color: 'Brown',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petFourtyFour = await createPet({
       breed: 'Pomeranian',
@@ -360,6 +566,10 @@ async function createInitialPets() {
       name: 'Nikki',
       gender: 'Female',
       color: 'White',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petFourtyFive = await createPet({
       breed: 'Dobermann',
@@ -367,6 +577,10 @@ async function createInitialPets() {
       name: 'Olive',
       gender: 'Female',
       color: 'Brown',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petFourtySix = await createPet({
       breed: 'Basset Hound',
@@ -374,6 +588,10 @@ async function createInitialPets() {
       name: 'Peanut',
       gender: 'Female',
       color: 'Brown',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petFourtySeven = await createPet({
       breed: 'Irish Setter',
@@ -381,6 +599,10 @@ async function createInitialPets() {
       name: 'Pebbles',
       gender: 'Female',
       color: 'Brown',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petFiourtyEight = await createPet({
       breed: 'Dalmatian',
@@ -388,6 +610,10 @@ async function createInitialPets() {
       name: 'Penny',
       gender: 'Female',
       color: 'White',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petFourtyNine = await createPet({
       breed: 'Sheltie',
@@ -395,6 +621,10 @@ async function createInitialPets() {
       name: 'Pepper',
       gender: 'Female',
       color: 'Brown',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petFifty = await createPet({
       breed: 'Corgi',
@@ -402,6 +632,10 @@ async function createInitialPets() {
       name: 'Luke',
       gender: 'Male',
       color: 'Brown',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petFiftyOne = await createPet({
       breed: 'French Bulldog',
@@ -409,6 +643,10 @@ async function createInitialPets() {
       name: 'Mac',
       gender: 'Male',
       color: 'Black',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petFiftyTwo = await createPet({
       breed: 'Italian Greyhound',
@@ -416,6 +654,10 @@ async function createInitialPets() {
       name: 'Marley',
       gender: 'Male',
       color: 'Gray',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petFiftyThree = await createPet({
       breed: 'German Shepherd',
@@ -423,6 +665,10 @@ async function createInitialPets() {
       name: 'Max',
       gender: 'Male',
       color: 'Brown',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petFiftyFour = await createPet({
       breed: 'Collie',
@@ -430,6 +676,10 @@ async function createInitialPets() {
       name: 'Mickey',
       gender: 'Male',
       color: 'Brown',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petFiftyFive = await createPet({
       breed: 'Labrador',
@@ -437,6 +687,10 @@ async function createInitialPets() {
       name: 'Milo',
       gender: 'Male',
       color: 'Gold',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petFiftySix = await createPet({
       breed: 'Yorkie',
@@ -444,6 +698,10 @@ async function createInitialPets() {
       name: 'Moose',
       gender: 'Male',
       color: 'Brown',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petFiftySeven = await createPet({
       breed: 'Terrier',
@@ -451,6 +709,10 @@ async function createInitialPets() {
       name: 'Murphy',
       gender: 'Male',
       color: 'Brown',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petFiftyEight = await createPet({
       breed: 'English Bulldog',
@@ -458,6 +720,10 @@ async function createInitialPets() {
       name: 'Oliver',
       gender: 'Male',
       color: 'White',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petFiftyNine = await createPet({
       breed: 'Great Dane',
@@ -465,6 +731,10 @@ async function createInitialPets() {
       name: 'Ollie',
       gender: 'Male',
       color: 'Gray',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petSixty = await createPet({
       breed: 'Poodle',
@@ -472,6 +742,10 @@ async function createInitialPets() {
       name: 'Oreo',
       gender: 'Male',
       color: 'Black',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petSixtyOne = await createPet({
       breed: 'Pitbull',
@@ -479,6 +753,10 @@ async function createInitialPets() {
       name: 'Oscar',
       gender: 'Male',
       color: 'Black',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petSixtyTwo = await createPet({
       breed: 'Rottweiler',
@@ -486,6 +764,10 @@ async function createInitialPets() {
       name: 'Princess',
       gender: 'Female',
       color: 'Brown',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petSixtyThree = await createPet({
       breed: 'Pomeranian',
@@ -493,6 +775,10 @@ async function createInitialPets() {
       name: 'Riley',
       gender: 'Female',
       color: 'White',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petSixtyFour = await createPet({
       breed: 'Dobermann',
@@ -500,6 +786,10 @@ async function createInitialPets() {
       name: 'Rosie',
       gender: 'Female',
       color: 'Brown',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petSixtyFive = await createPet({
       breed: 'Basset Hound',
@@ -507,6 +797,10 @@ async function createInitialPets() {
       name: 'Roxie',
       gender: 'Female',
       color: 'Brown',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petSixtySix = await createPet({
       breed: 'Irish Setter',
@@ -514,6 +808,10 @@ async function createInitialPets() {
       name: 'Roxy',
       gender: 'Female',
       color: 'Brown',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petSixtySeven = await createPet({
       breed: 'Dalmatian',
@@ -521,6 +819,10 @@ async function createInitialPets() {
       name: 'Ruby',
       gender: 'Female',
       color: 'White',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petSixtyEight = await createPet({
       breed: 'Sheltie',
@@ -528,6 +830,10 @@ async function createInitialPets() {
       name: 'Sadie',
       gender: 'Female',
       color: 'Brown',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petSixtyNine = await createPet({
       breed: 'Corgi',
@@ -535,6 +841,10 @@ async function createInitialPets() {
       name: 'Sally',
       gender: 'Female',
       color: 'Brown',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petSeventy = await createPet({
       breed: 'French Bulldog',
@@ -542,6 +852,10 @@ async function createInitialPets() {
       name: 'Sandy',
       gender: 'Female',
       color: 'Gray',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petSeventyOne = await createPet({
       breed: 'Italian Greyhound',
@@ -549,6 +863,10 @@ async function createInitialPets() {
       name: 'Sasha',
       gender: 'Female',
       color: 'Gray',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petSeventyTwo = await createPet({
       breed: 'German Shepherd',
@@ -556,6 +874,10 @@ async function createInitialPets() {
       name: 'Sassy',
       gender: 'Female',
       color: 'Brown',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petSeventyThree = await createPet({
       breed: 'Collie',
@@ -563,6 +885,10 @@ async function createInitialPets() {
       name: 'Scout',
       gender: 'Male',
       color: 'Brown',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petSeventyFour = await createPet({
       breed: 'Labrador',
@@ -570,6 +896,10 @@ async function createInitialPets() {
       name: 'Shadow',
       gender: 'Male',
       color: 'Gold',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petSeventyFive = await createPet({
       breed: 'Yorkie',
@@ -577,6 +907,10 @@ async function createInitialPets() {
       name: 'Shelby',
       gender: 'Female',
       color: 'Brown',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petSeventySix = await createPet({
       breed: 'Terrier',
@@ -584,6 +918,10 @@ async function createInitialPets() {
       name: 'Sierra',
       gender: 'female',
       color: 'Brown',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petSeventySeven = await createPet({
       breed: 'English Bulldog',
@@ -591,6 +929,10 @@ async function createInitialPets() {
       name: 'Scooter',
       gender: 'Male',
       color: 'Brown',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petSeventyEight = await createPet({
       breed: 'Great Dane',
@@ -598,6 +940,10 @@ async function createInitialPets() {
       name: 'Scout',
       gender: 'Male',
       color: 'Gray',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petSeventyNine = await createPet({
       breed: 'Poodle',
@@ -605,6 +951,10 @@ async function createInitialPets() {
       name: 'Shadow',
       gender: 'Male',
       color: 'White',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petEighty = await createPet({
       breed: 'Pitbull',
@@ -612,6 +962,10 @@ async function createInitialPets() {
       name: 'Simba',
       gender: 'Male',
       color: 'Black',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petEightyOne = await createPet({
       breed: 'Rottweiler',
@@ -619,6 +973,10 @@ async function createInitialPets() {
       name: 'Sparky',
       gender: 'Male',
       color: 'Brown',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petEightyTwo = await createPet({
       breed: 'Pomeranian',
@@ -626,6 +984,10 @@ async function createInitialPets() {
       name: 'Spike',
       gender: 'Male',
       color: 'White',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petEightyThree = await createPet({
       breed: 'Dobermann',
@@ -633,6 +995,10 @@ async function createInitialPets() {
       name: 'Tank',
       gender: 'Male',
       color: 'Brown',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petEightyFour = await createPet({
       breed: 'Basset Hound',
@@ -640,6 +1006,10 @@ async function createInitialPets() {
       name: 'Teddy',
       gender: 'Male',
       color: 'Brown',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petEightyFive = await createPet({
       breed: 'Irish Setter',
@@ -647,6 +1017,10 @@ async function createInitialPets() {
       name: 'Thor',
       gender: 'Male',
       color: 'Brown',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petEightySix = await createPet({
       breed: 'Dalmatian',
@@ -654,6 +1028,10 @@ async function createInitialPets() {
       name: 'Toby',
       gender: 'Male',
       color: 'White',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petEightySeven = await createPet({
       breed: 'Sheltie',
@@ -661,6 +1039,10 @@ async function createInitialPets() {
       name: 'Tucker',
       gender: 'Male',
       color: 'Brown',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petEightyEight = await createPet({
       breed: 'Corgi',
@@ -668,6 +1050,10 @@ async function createInitialPets() {
       name: 'Tyson',
       gender: 'Male',
       color: 'Brown',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petEightNine = await createPet({
       breed: 'French Bulldog',
@@ -675,6 +1061,10 @@ async function createInitialPets() {
       name: 'Vader',
       gender: 'Male',
       color: 'Gray',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petNinety = await createPet({
       breed: 'Italian Greyhound',
@@ -682,6 +1072,10 @@ async function createInitialPets() {
       name: 'Winston',
       gender: 'Male',
       color: 'Gray',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petNinetyOne = await createPet({
       breed: 'German Shepherd',
@@ -689,6 +1083,10 @@ async function createInitialPets() {
       name: 'Yoda',
       gender: 'Male',
       color: 'Brown',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petNinetyTwo = await createPet({
       breed: 'German Shepherd',
@@ -696,6 +1094,10 @@ async function createInitialPets() {
       name: 'Sam',
       gender: 'Male',
       color: 'Brown',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petNinetyThree = await createPet({
       breed: 'Labrador',
@@ -703,6 +1105,10 @@ async function createInitialPets() {
       name: 'Girlie',
       gender: 'Female',
       color: 'Black',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petNinetyFour = await createPet({
       breed: 'Poodle',
@@ -710,6 +1116,10 @@ async function createInitialPets() {
       name: 'Dude',
       gender: 'Male',
       color: 'White',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petNinetyFive = await createPet({
       breed: 'Poodle',
@@ -717,6 +1127,10 @@ async function createInitialPets() {
       name: 'Bailey',
       gender: 'Male',
       color: 'Gray',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petNinetySix = await createPet({
       breed: 'Terrier',
@@ -724,6 +1138,10 @@ async function createInitialPets() {
       name: 'Lilly',
       gender: 'Female',
       color: 'Brown',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petNinetySeven = await createPet({
       breed: 'Yorkie',
@@ -731,6 +1149,10 @@ async function createInitialPets() {
       name: 'Max',
       gender: 'Male',
       color: 'Brown',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petNinetyEight = await createPet({
       breed: 'Corgi',
@@ -738,6 +1160,10 @@ async function createInitialPets() {
       name: 'Maxene',
       gender: 'Female',
       color: 'Brown',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petNinetyNine = await createPet({
       breed: 'Yorkie',
@@ -745,19 +1171,21 @@ async function createInitialPets() {
       name: 'Hope',
       gender: 'Female',
       color: 'Brown',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
     const petOneHundred = await createPet({
-      breed: 'Dalmation',
+      breed: 'Dalmatian',
       age: '12',
       name: 'Deville',
       gender: 'Male',
       color: 'White',
-
-      name: 'Frenchie',
-      breed: 'French Bulldog',
-      age: '5',
-      gender: 'Female',
-      color: 'Brindle',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
     });
 
     console.log('Great Success!');
@@ -768,38 +1196,79 @@ async function createInitialPets() {
   }
 }
 
-async function createInitialLogInfo() {
+async function createInitialUsers() {
   try {
     // create useful starting data
     console.log('Attempting to create login info');
-    const loginInfoOne = await createLogInfo({
-      username: 'REDLEADER1',
-      orderNum: '175',
+    const userOne = await createUser({
+      username: 'ExampleUser1',
+      email: 'exampleuser1@yahoo.com',
+      role: 'user',
+      password: 'password123',
     });
-    const loginInfoTwo = await createLogInfo({
-      username: 'GREENMAN99999',
-      orderNum: '174',
+    const userTwo = await createUser({
+      username: 'ExampleUser2',
+      email: 'exampleuser2@yahoo.com',
+      role: 'user',
+      password: 'password123',
     });
-    const loginInfoThree = await createLogInfo({
-      username: 'BLUES47555',
-      orderNum: '176',
+    const userThree = await createUser({
+      username: 'Admin',
+      email: 'admin@gmail.com',
+      role: 'admin',
+      password: 'password123',
     });
     console.log('Great Success!');
-    return [loginInfoOne, loginInfoTwo, loginInfoThree];
+    return [userOne, userTwo, userThree];
   } catch (error) {
     console.error('Error during login creation');
     throw error;
   }
 }
 
+async function createInitialCarts() {
+  try {
+    console.log('attemping to create carts');
+    const cartOne = await createCart({
+      userId: 1,
+      petId: [1, 3, 6],
+    });
+
+    const cartTwo = await createCart({
+      userId: 2,
+      petId: [1, 4, 2],
+    });
+
+    const cartThree = await createCart({
+      userId: 3,
+      pettId: [2, 3, 5],
+    });
+
+    const cartFour = await createCart({
+      userId: 4,
+      petId: [5, 1, 6],
+    });
+
+    console.log('Creating Carts Successful!');
+
+    return [cartOne, cartTwo, cartThree, cartFour];
+  } catch (error) {
+    console.error('error while creating carts');
+    throw error;
+  }
+}
+
 async function populateInitialData() {
   try {
-    console.log('Filling database with initial pet data');
+    console.log('Filling database with initial user/product/cart data');
     await createInitialPets();
-    await createInitialLogInfo();
+    await createInitialUsers();
+    await createInitialCarts();
     console.log('Getting all pets: \n');
     console.log('Filled pet database');
     console.log('Finished filling pet database');
+    console.log('Finished filling users');
+    console.log('Finished filling Carts');
   } catch (error) {
     throw error;
   }
