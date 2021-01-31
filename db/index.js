@@ -54,7 +54,7 @@ async function createPet({
 async function getUsers() {
   try {
     const { rows } = await client.query(`
-      SELECT * FROM "Users"
+      SELECT * FROM login
     `);
     return rows;
   } catch (error) {
@@ -68,7 +68,7 @@ async function createUser({ username, email, role, password }) {
       rows: [user],
     } = await client.query(
       `
-      INSERT INTO "Users"(username, email, role, password)
+      INSERT INTO login(username, email, role, password)
       VALUES ($1, $2, $3, $4)
       RETURNING *;
     `,
@@ -98,7 +98,7 @@ async function updateUser(fieldsObject, userId) {
       rows: [user],
     } = await client.query(
       `
-        UPDATE "Users"
+        UPDATE login
         SET ${setString}
         WHERE id = ${userId}
         RETURNING *
@@ -116,7 +116,7 @@ async function promoteUser(userId, role) {
     role === 'user'
       ? await client.query(
           `
-      UPDATE "Users"
+      UPDATE login
       SET role='admin'
       WHERE id=$1;
     `,
@@ -124,7 +124,7 @@ async function promoteUser(userId, role) {
         )
       : await client.query(
           `
-      UPDATE "Users"
+      UPDATE login
       SET role='user'
       WHERE id=$1;
     `,
@@ -132,7 +132,7 @@ async function promoteUser(userId, role) {
         );
 
     const { rows } = await client.query(`
-      SELECT * FROM "Users"
+      SELECT * FROM login
     `);
     return rows;
   } catch (error) {
@@ -146,7 +146,7 @@ async function getUserById(userId) {
     const {
       rows: [user],
     } = await client.query(`
-      SELECT * FROM "Users"
+      SELECT * FROM login
       WHERE id=${userId}
     `);
 
@@ -166,7 +166,7 @@ async function getUserByUsername(username) {
       rows: [user],
     } = await client.query(
       `
-      SELECT * FROM "Users"
+      SELECT * FROM login
       WHERE username=$1
     `,
       [username]
@@ -503,7 +503,7 @@ async function deleteUser(userId) {
       rows: [user],
     } = await client.query(
       `
-      DELETE FROM "Users"
+      DELETE FROM login
       WHERE id = $1
       RETURNING *
     `,

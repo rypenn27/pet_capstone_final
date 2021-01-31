@@ -21,10 +21,9 @@ async function dropTables() {
     console.log('Starting to drop tables');
     client.query(`
     DROP TABLE if EXISTS pets;
-    DROP TABLE if EXISTS "Users" CASCADE;
+    DROP TABLE if EXISTS login CASCADE;
     DROP TABLE if EXISTS cart;
     DROP TABLE if EXISTS RescueOrders;
-
     `);
     console.log('Finished dropping tables');
   } catch (error) {
@@ -32,11 +31,9 @@ async function dropTables() {
     throw error;
   }
 }
-
 async function buildTables() {
   try {
     client.connect();
-
     // drop tables in correct order
     await dropTables();
     // build tables in correct order
@@ -54,22 +51,19 @@ async function buildTables() {
       price DECIMAL NOT NULL,
       count INTEGER NOT NULL,
       "available" BOOLEAN
-
     );
      CREATE TABLE cart (
       id SERIAL PRIMARY KEY,
-      "userId" INTEGER REFERENCES "Users"(id),
+      "userId" INTEGER,
       "petId" INTEGER[],
       status TEXT NOT NULL
       );
-
     CREATE TABLE RescueOrders (
        id SERIAL PRIMARY KEY,
-       "userId" INTEGER REFERENCES "Users"(username),
-       "cartId" INTEGER REFERENCES cart(id)
+       "userId" INTEGER, 
+       "cartId" INTEGER 
 );
-
-    CREATE TABLE "Users"(
+    CREATE TABLE login (
       id SERIAL PRIMARY KEY,
       username varchar (255) NOT NULL UNIQUE,
       email varchar (255) NOT NULL UNIQUE,
@@ -77,7 +71,7 @@ async function buildTables() {
       password varchar (255) NOT NULL
     );
     `);
-    console.log('Finished table bulding');
+    console.log('Finished table building');
   } catch (error) {
     throw error;
   }
