@@ -11,7 +11,7 @@ const DB_URL =
 //Creating the client
 const client = new Client(DB_URL);
 
-// database methods
+// get all the Pets from Pet Table
 async function getPets() {
   try {
     const { rows } = await client.query(`SELECT * FROM pets`);
@@ -21,36 +21,7 @@ async function getPets() {
   }
 }
 
-async function createPet({
-  name,
-  breed,
-  age,
-  gender,
-  color,
-  price,
-  available,
-  quantity,
-  count,
-}) {
-  try {
-    const {
-      rows: [petCreated],
-    } = await client.query(
-      `
-    INSERT INTO pets(name, breed, age, gender, color,price,available,quantity,count)
-    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
-    RETURNING *
-    `,
-      [name, breed, age, gender, color, price, available, quantity, count]
-    );
-    // return new link
-    console.log(petCreated);
-    return petCreated;
-  } catch (error) {
-    throw error;
-  }
-}
-
+//get all Users from Login Table
 async function getUsers() {
   try {
     const { rows } = await client.query(`
@@ -62,6 +33,7 @@ async function getUsers() {
   }
 }
 
+//create a user and store their profile in Login Table
 async function createUser({ username, email, role, password }) {
   try {
     const {
@@ -79,64 +51,6 @@ async function createUser({ username, email, role, password }) {
   } catch (error) {
     console.log('error in DB: ', error.message);
     throw error.message;
-  }
-}
-
-async function updateUser(fieldsObject, userId) {
-  console.log('parameters', fieldsObject, userId);
-  try {
-    const retrievedUser = await getUserById(userId);
-    console.log('retrieved user successfully', retrievedUser);
-    if (retrievedUser === null) {
-      throw new Error('A User with that id does not exist.');
-    }
-    const setString = Object.keys(fieldsObject)
-      .map((key, index) => `"${key}"=$${index + 1}`)
-      .join(', ');
-    console.log('setString in DB', setString);
-    const {
-      rows: [user],
-    } = await client.query(
-      `
-        UPDATE login
-        SET ${setString}
-        WHERE id = ${userId}
-        RETURNING *
-    `,
-      Object.values(fieldsObject)
-    );
-    return user;
-  } catch (error) {
-    throw error;
-  }
-}
-
-async function promoteUser(userId, role) {
-  try {
-    role === 'user'
-      ? await client.query(
-          `
-      UPDATE login
-      SET role='admin'
-      WHERE id=$1;
-    `,
-          [userId]
-        )
-      : await client.query(
-          `
-      UPDATE login
-      SET role='user'
-      WHERE id=$1;
-    `,
-          [userId]
-        );
-
-    const { rows } = await client.query(`
-      SELECT * FROM login
-    `);
-    return rows;
-  } catch (error) {
-    throw error;
   }
 }
 
@@ -160,6 +74,7 @@ async function getUserById(userId) {
   }
 }
 
+// select a single User from Login Table by their Username
 async function getUserByUsername(username) {
   try {
     const {
@@ -178,6 +93,7 @@ async function getUserByUsername(username) {
   }
 }
 
+//get all orders from RescueOrders table
 async function getRescueOrders() {
   try {
     const { rows } = await client.query(`
@@ -208,6 +124,7 @@ async function getRescueOrders() {
   }
 }
 
+//get a pet from the pet table by their ID
 async function getPetById(petId) {
   try {
     const {
@@ -225,35 +142,37 @@ async function getPetById(petId) {
   }
 }
 
-async function updatePet(petId, fields = {}) {
-  const setString = Object.keys(fields)
-    .map((key, index) => `"${key}"=$${index + 1}`)
-    .join(', ');
-  console.log('Here is the setString: ', setString);
-  // update products table
+async function createPet({
+  name,
+  breed,
+  age,
+  gender,
+  color,
+  price,
+  available,
+  quantity,
+  count,
+}) {
   try {
-    // update any fields that need to be updated
-    if (setString.length > 0) {
-      await client.query(
-        `
-          UPDATE pets
-          SET ${setString}
-          WHERE id=${petId};
-        `,
-        Object.values(fields)
-      );
-
-      const { rows } = await client.query(`
-        SELECT * FROM pets;
-        `);
-      return rows;
-    }
+    const {
+      rows: [petCreated],
+    } = await client.query(
+      `
+    INSERT INTO pets(name, breed, age, gender, color,price,available,quantity,count)
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+    RETURNING *
+    `,
+      [name, breed, age, gender, color, price, available, quantity, count]
+    );
+    // return a new link
+    console.log(petCreated);
+    return petCreated;
   } catch (error) {
     throw error;
   }
 }
 
-// cart created, pets added = processing and checkout = completed
+// cart  is created, pets added are processing and checkout is complete
 // cart for specific user
 // petId pushed into pets array
 async function createCart({ userId, petId, status = 'created' }) {
@@ -275,8 +194,8 @@ async function createCart({ userId, petId, status = 'created' }) {
   }
 }
 
-// not grabbing completed carts only created and processing.
-// grab user specific cart
+// only gets carts that are created and processing for a specific cart or "basket"
+
 async function getCart({ userId }) {
   console.log('userId', userId);
   try {
@@ -334,9 +253,9 @@ async function getCart({ userId }) {
   }
 }
 
-// user adds item to cart > status = processing
-// result is all completed orders
-// helper function - no need to export
+// user adds item to cart and changes status to "processing"
+// this we can implement with stripe if we can get there
+
 async function getCompletedCart({ userId }) {
   try {
     const { rows } = await client.query(
@@ -371,44 +290,9 @@ async function getCompletedCart({ userId }) {
   }
 }
 
-// list of orders for admin
-async function getRescueOrder(userId) {
-  try {
-    const { rows } = await client.query(
-      `
-      SELECT * FROM RescueOrders
-      WHERE "userId" = $1
-    `,
-      [userId]
-    );
-
-    const cartArr = [];
-    for (let i = 0; i < rows.length; i++) {
-      console.log('user id', rows[i].userId);
-      const cart = await getCompletedCart({ userId: rows[i].cartId });
-      console.log('cart', cart, cart.length);
-      const totalArr = [];
-
-      if (cart !== []) {
-        cart.pets.map((pet) => {
-          totalArr.push(parseFloat(pet.price * pet.count));
-        });
-        const total = totalArr.reduce((a, b) => a + b, 0).toFixed(2);
-        console.log('total', totalArr);
-        cartArr.push({ rows: rows[i], cart, total });
-      }
-    }
-    console.log('cart array get orders', cartArr);
-    return { cartArr };
-  } catch (error) {
-    throw error;
-  }
-}
-
 // add to cart function
-// check if cart has pets
+// check if cart or "basket" has pets then get the cart for for the user
 async function addToCart({ userId, petId }) {
-  // get cart for user
   const cart = await getCart({ userId });
   const cartId = cart.id;
   const oldPets = cart.pets;
@@ -443,7 +327,7 @@ async function addToCart({ userId, petId }) {
   }
 }
 
-// who is checking out and which cart
+// a way to identify what user is checking out and what cart is associated
 async function checkout({ userId, cartId }) {
   console.log('checkout user cart id', userId, cartId);
   try {
@@ -475,48 +359,7 @@ async function checkout({ userId, cartId }) {
   }
 }
 
-async function deleteUser(userId) {
-  console.log('userId', userId);
-  try {
-    const {
-      rows: [order],
-    } = await client.query(
-      `
-      DELETE FROM RescueOrders
-      WHERE id = $1
-      RETURNING *
-    `,
-      [userId]
-    );
-
-    const {
-      rows: [cart],
-    } = await client.query(
-      `
-      DELETE FROM cart
-      WHERE id = $1
-      RETURNING *
-    `,
-      [userId]
-    );
-    const {
-      rows: [user],
-    } = await client.query(
-      `
-      DELETE FROM login
-      WHERE id = $1
-      RETURNING *
-    `,
-      [userId]
-    );
-
-    console.log('user', user);
-    return { RescueOrder, cart, user };
-  } catch (error) {
-    throw error;
-  }
-}
-
+//delete a pet from the pet table
 async function deletePet(petId) {
   try {
     const {
@@ -536,6 +379,7 @@ async function deletePet(petId) {
   }
 }
 
+//add to the count of a pet in the pet table
 async function addCount(id) {
   const pet = await getPetById(id);
   console.log('pet count', pet);
@@ -555,6 +399,7 @@ async function addCount(id) {
   }
 }
 
+//subtract count of a pet from the pet Table
 async function subtractCount(id) {
   const pet = await getPetById(id);
   console.log('pet count', pet);
@@ -574,31 +419,6 @@ async function subtractCount(id) {
   }
 }
 
-async function deleteRescueOrdersAndCart(userId) {
-  try {
-    await client.query(
-      `
-    DELETE FROM RescueOrders
-    WHERE "userId"=$1;
-    `,
-      [userId]
-    );
-
-    const { rows } = await client.query(
-      `
-    DELETE FROM cart
-    WHERE "userId"=$1
-    RETURNING *;
-    `,
-      [userId]
-    );
-
-    return rows;
-  } catch (error) {
-    throw error;
-  }
-}
-
 // export
 module.exports = {
   client,
@@ -607,22 +427,16 @@ module.exports = {
   getUserById,
   getUserByUsername,
   getPets,
-  createPet,
-  updateUser,
-  promoteUser,
   getPetById,
-  updatePet,
-  deleteUser,
   deletePet,
-  deleteRescueOrdersAndCart,
   getCart,
   createCart,
   addToCart,
   checkout,
-  getRescueOrder,
   getRescueOrders,
   addCount,
   subtractCount,
+  createPet,
 
   // db methods
 };
