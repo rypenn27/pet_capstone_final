@@ -19,7 +19,7 @@ const Cart = () => {
         <Modal.Header closeButton>
           <Modal.Title>Your Basket</Modal.Title>
         </Modal.Header>
-        <Modal.Body>Dog Name and Quantity</Modal.Body>
+        <Modal.Body>Basket is Empty!</Modal.Body>
         <Modal.Footer>
           <Button variant='flat' onClick={handleClose}>
             Keep Looking!
