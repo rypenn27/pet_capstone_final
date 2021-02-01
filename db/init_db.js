@@ -2,7 +2,7 @@
 const {
   client,
   getPets,
-  createPet,
+
   getUsers,
   getUserById,
   getUserByUsername,
@@ -12,7 +12,6 @@ const {
   createCart,
   addToCart,
   checkout,
-  getRescueOrder,
   // other db methods
 } = require('./index');
 
