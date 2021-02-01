@@ -24,9 +24,9 @@ export async function getLogInfo() {
 }
 
 // get users by id
-export async function getUserById(userId) {
+export async function getUserById(loginId) {
   try {
-    const { data } = await axios.get(`/api/users/${userId}`);
+    const { data } = await axios.get(`/api/users/${loginId}`);
     return data;
   } catch (error) {
     throw error;
@@ -62,7 +62,7 @@ export async function addToCart(loginId, petId) {
   console.log('data send', dataToSend);
   try {
     if (dataToSend.loginId && dataToSend.petId.length > 0) {
-      /* console.log(dataToSend.userId, dataToSend.productId.length); */
+      /* console.log(dataToSend.loginId, dataToSend.productId.length); */
       const { data } = await axiosWithAuth().patch(`/api/cart`, dataToSend);
       return data;
     }
@@ -72,7 +72,7 @@ export async function addToCart(loginId, petId) {
 }
 
 // creates user - register route/endpoint
-// user object fields required
+// login object fields required
 export async function createUser(username, email, password) {
   const dataToSend = { username, email, password };
   try {
