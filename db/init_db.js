@@ -31,7 +31,7 @@ async function dropTables() {
     `);
     console.log('Finished dropping tables');
   } catch (error) {
-    console.error('Error with dropping tables');
+    console.error('Error with dropping tablesssssssssssss');
     throw error;
   }
 }
