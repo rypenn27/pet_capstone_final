@@ -8,7 +8,7 @@ const Cart = () => {
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-
+  console.log('new cart');
   return (
     <>
       <Button variant='flat' onClick={handleShow}>
