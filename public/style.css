@@ -15,6 +15,10 @@ header {
 
 .logo {
   font-family: cursive;
+  width: 50%;
+}
+.friend {
+  width: 50%;
 }
 
 .card {
@@ -59,4 +63,20 @@ img {
 
 .searchButton {
   margin-left: 10px;
+}
+
+.pawCart {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin-top: 15px;
+  margin-right: 15px;
+}
+
+.loginnn {
+  margin-right: 10px;
+}
+
+.likeBtn {
+  margin-left: 5px;
 }

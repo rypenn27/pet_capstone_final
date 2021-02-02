@@ -23,13 +23,13 @@ const Search = (props) => {
 
   function petFilter(query) {
     const filteredPets = [];
-
+    console.log('Error');
     pets.map((pet) => {
       let b = pet.breed;
       let breed = b.toLowerCase();
 
       let q = query.toLowerCase();
-
+      console.log('Error');
       if (breed.split(' ').includes(q)) {
         filteredPets.push(pet);
         setPets(filteredPets);
@@ -58,10 +58,10 @@ const Search = (props) => {
         <br />
         <Button
           className='searchButton'
-          variant='primary'
+          variant='flat'
           onClick={(e) => petFilter(searchQuery)}
         >
-          Search
+          Search <i className='fas fa-paw'></i>
         </Button>
       </div>
     </>
