@@ -2,7 +2,7 @@
 const {
   client,
   getPets,
-
+  createPet,
   getUsers,
   getUserById,
   getUserByUsername,
