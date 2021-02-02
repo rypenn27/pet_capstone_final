@@ -3,6 +3,7 @@ const {
   client,
   getPets,
   createPet,
+
   getUsers,
   getUserById,
   getUserByUsername,
@@ -12,6 +13,10 @@ const {
   createCart,
   addToCart,
   checkout,
+
+  getLogin,
+  createLogin,
+
   // other db methods
 } = require('./index');
 
@@ -45,6 +50,7 @@ async function buildTables() {
       breed varchar (255) NOT NULL,
       age INTEGER NOT NULL,
       gender varchar (255) NOT NULL,
+
       color varchar (255) NOT NULL,
       quantity INTEGER NOT NULL,
       price DECIMAL NOT NULL,
@@ -71,6 +77,17 @@ async function buildTables() {
     );
     `);
     console.log('Finished table building');
+
+      color varchar (255) NOT NULL
+      );
+
+      CREATE TABLE login(
+      userid SERIAL PRIMARY KEY,
+      username varchar (255) NOT NULL,
+      orderid INTEGER UNIQUE
+      )`);
+    console.log('Finished table bulding');
+
   } catch (error) {
     throw error;
   }
@@ -1188,6 +1205,19 @@ async function createInitialPets() {
     throw error;
   }
 }
+async function createInitialLogin() {
+  try {
+    const userOne = await createLogin({
+      username: 'kyoso-zoku',
+      orderid:'1785',    
+    });
+    console.log('Great Success!');
+    return [userOne];
+  } catch (error) {
+    console.error('Error during login creation');
+    throw error;
+  }
+}
 
 async function createInitialUsers() {
   try {
@@ -1255,9 +1285,15 @@ async function populateInitialData() {
   try {
     console.log('Filling database with initial user/product/cart data');
     await createInitialPets();
+
     await createInitialUsers();
     await createInitialCarts();
     console.log('Getting all pets: \n');
+
+    await createInitialLogin();
+    console.log('Getting all pets: \n', await getPets());
+    console.log('Getting all logins: \n', await getLogin());
+
     console.log('Filled pet database');
     console.log('Finished filling pet database');
     console.log('Finished filling users');

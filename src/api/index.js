@@ -1,5 +1,6 @@
 import axios from 'axios';
 
+
 const axiosWithAuth = () => {
   const token = `Bearer ${localStorage.getItem('token')}`;
   return axios.create({ headers: { Authorization: token } });
@@ -13,6 +14,16 @@ export async function getPets() {
     throw error;
   }
 }
+
+// export async function getSomething() {
+//   try {
+//     const { data } = await axios.get('/api');
+//     return data;
+//   } catch (error) {
+//     throw error;
+//   }
+// }
+
 
 export async function getLogInfo() {
   try {
@@ -269,3 +280,4 @@ export async function checkOrdersAndCart(loginId) {
     throw error;
   }
 }
+

@@ -11,7 +11,11 @@ const App = () => {
     <>
       <Header pets={pets} setPets={setPets} />
       <Home pets={pets} setPets={setPets} />
+
       <Cart show={show} setShow={setShow} />
+
+
+
     </>
   );
 };
