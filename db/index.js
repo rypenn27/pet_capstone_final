@@ -21,14 +21,6 @@ async function getPets() {
   }
 }
 
-
-//get all Users from Login Table
-async function getUsers() {
-  try {
-    const { rows } = await client.query(`
-      SELECT * FROM login
-    `);
-
 async function getLogin() {
   try {
     const { rows } = await client.query(`SELECT * FROM login`);
@@ -38,7 +30,6 @@ async function getLogin() {
     throw error;
   }
 }
-
 
 //create a user and store their profile in Login Table
 async function createUser({ username, email, role, password }) {
@@ -160,9 +151,6 @@ async function createPet({
   quantity,
   count,
 }) {
-
-async function createPet({ name, breed, age, gender, color }) {
-
   try {
     const {
       rows: [petCreated],
@@ -181,7 +169,6 @@ async function createPet({ name, breed, age, gender, color }) {
     throw error;
   }
 }
-
 
 // cart  is created, pets added are processing and checkout is complete
 // cart for specific user
@@ -425,6 +412,10 @@ async function subtractCount(id) {
       [pet.count - 1, id]
     );
     return rows;
+  } catch (error) {
+    throw error;
+  }
+}
 
 async function createLogin({ username, orderid }) {
   try {
@@ -441,16 +432,14 @@ async function createLogin({ username, orderid }) {
     // return new link
     console.log(loginCreated);
     return loginCreated;
-
   } catch (error) {
     throw error;
   }
 }
 
-// export
 module.exports = {
   client,
-  getUsers,
+
   createUser,
   getUserById,
   getUserByUsername,
@@ -465,11 +454,8 @@ module.exports = {
   addCount,
   subtractCount,
   createPet,
-
-
-
   getLogin,
-  createLogin
+  createLogin,
 
   // db methods
 };
