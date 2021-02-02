@@ -1,6 +1,5 @@
 const apiRouter = require('express').Router();
 
-
 const { default: axios } = require('axios');
 const jwt = require('jsonwebtoken');
 // token confirmation
@@ -8,12 +7,6 @@ const { OAuth2Client } = require('google-auth-library');
 const client = new OAuth2Client(process.env.REACT_APP_CLIENTID);
 // google oauth
 const passport = require('passport');
-
-
-const { getPets, createPet } = require('../db');
-
-
-
 
 apiRouter.get('/', (req, res, next) => {
   res.send({

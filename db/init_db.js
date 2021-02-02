@@ -76,18 +76,7 @@ async function buildTables() {
       password varchar (255) NOT NULL
     );
     `);
-    console.log('Finished table building');
-
-      color varchar (255) NOT NULL
-      );
-
-      CREATE TABLE login(
-      userid SERIAL PRIMARY KEY,
-      username varchar (255) NOT NULL,
-      orderid INTEGER UNIQUE
-      )`);
-    console.log('Finished table bulding');
-
+    console.log('finished creating tables');
   } catch (error) {
     throw error;
   }
@@ -1205,19 +1194,6 @@ async function createInitialPets() {
     throw error;
   }
 }
-async function createInitialLogin() {
-  try {
-    const userOne = await createLogin({
-      username: 'kyoso-zoku',
-      orderid:'1785',    
-    });
-    console.log('Great Success!');
-    return [userOne];
-  } catch (error) {
-    console.error('Error during login creation');
-    throw error;
-  }
-}
 
 async function createInitialUsers() {
   try {
@@ -1290,7 +1266,6 @@ async function populateInitialData() {
     await createInitialCarts();
     console.log('Getting all pets: \n');
 
-    await createInitialLogin();
     console.log('Getting all pets: \n', await getPets());
     console.log('Getting all logins: \n', await getLogin());
 

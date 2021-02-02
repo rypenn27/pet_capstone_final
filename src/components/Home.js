@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 
-
 import corgi from './pet_images/corgi.jpg';
 import yorkie from './pet_images/yorkie.jpg';
 import sheltie from './pet_images/sheltie.jpg';
@@ -24,12 +23,6 @@ import englishBulldog from './pet_images/englishBulldog.jpg';
 import terrier from './pet_images/terrier.jpg';
 
 import { getPets } from '../api';
-
-import { getPets, createPet } from '../api';
-
-
-
-
 
 const Home = (props) => {
   const pets = props.pets;
