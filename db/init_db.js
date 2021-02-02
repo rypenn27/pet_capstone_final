@@ -22,7 +22,7 @@ const {
 
 async function dropTables() {
   try {
-    console.log('Starting to drop tables');
+    console.log('Starting to drop tablesssssssss');
     client.query(`
     DROP TABLE if EXISTS pets;
     DROP TABLE if EXISTS login CASCADE;
