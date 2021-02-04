@@ -84,7 +84,9 @@ const Home = (props) => {
           ) : (
             <Card.Img variant='top' src='...' />
           )}
-          <Card.Header as='h5'>{pet.name}</Card.Header>
+          <Card.Header className='petName' as='h5'>
+            {pet.name}
+          </Card.Header>
           <Card.Body>
             <Card.Text>Breed: {pet.breed}</Card.Text>
             <Card.Text>Age: {pet.age}</Card.Text>

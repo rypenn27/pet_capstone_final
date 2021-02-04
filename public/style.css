@@ -78,5 +78,15 @@ img {
 }
 
 .likeBtn {
-  margin-left: 5px;
+  margin-left: 25px;
+}
+
+.petName {
+  font-family: cursive;
+  font-weight: bolder;
+  margin-top: 0.5px;
+}
+
+img {
+  margin-bottom: 0.5px;
 }
