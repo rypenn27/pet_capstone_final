@@ -3,7 +3,6 @@ const {
   client,
   getPets,
   createPet,
-
   getUsers,
   getUserById,
   getUserByUsername,
@@ -13,7 +12,6 @@ const {
   createCart,
   addToCart,
   checkout,
-
   getLogin,
   createLogin,
 
@@ -119,39 +117,7 @@ async function createInitialPets() {
       available: true,
       count: 1,
     });
-    const petFour = await createPet({
-      breed: 'French Bulldog',
-      age: '2',
-      name: 'Ace',
-      gender: 'Male',
-      color: 'Black',
-      quantity: 1,
-      price: 150,
-      available: true,
-      count: 1,
-    });
-    const petFive = await createPet({
-      breed: 'Italian Greyhound',
-      age: '4',
-      name: 'Apollo',
-      gender: 'Male',
-      color: 'Gray',
-      quantity: 1,
-      price: 150,
-      available: true,
-      count: 1,
-    });
-    const petSix = await createPet({
-      breed: 'German Shepherd',
-      age: '6',
-      name: 'Bailey',
-      gender: 'Male',
-      color: 'Brown',
-      quantity: 1,
-      price: 150,
-      available: true,
-      count: 1,
-    });
+
     const petSeven = await createPet({
       breed: 'Collie',
       age: '2',
@@ -178,6 +144,40 @@ async function createInitialPets() {
       breed: 'Yorkie',
       age: '10',
       name: 'Bear',
+      gender: 'Male',
+      color: 'Brown',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
+    });
+
+    const petFour = await createPet({
+      breed: 'French Bulldog',
+      age: '2',
+      name: 'Ace',
+      gender: 'Male',
+      color: 'Black',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
+    });
+    const petFive = await createPet({
+      breed: 'Italian Greyhound',
+      age: '4',
+      name: 'Apollo',
+      gender: 'Male',
+      color: 'Gray',
+      quantity: 1,
+      price: 150,
+      available: true,
+      count: 1,
+    });
+    const petSix = await createPet({
+      breed: 'German Shepherd',
+      age: '6',
+      name: 'Bailey',
       gender: 'Male',
       color: 'Brown',
       quantity: 1,

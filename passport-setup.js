@@ -1,4 +1,5 @@
 const passport = require('passport');
+const keys = require('./keys');
 var GoogleStrategy = require('passport-google-oauth20').Strategy;
 
 passport.serializeUser(function (user, done) {
@@ -13,8 +14,7 @@ passport.deserializeUser(function (id, done) {
 passport.use(
   new GoogleStrategy(
     {
-      callbackURL:
-        'https://radiant-ocean-11743.herokuapp.com/auth/google/redirect',
+      callbackURL: 'https://radiant-ocean-11743.herokuapp.com/google/callback',
       clientID: keys.google.clientID,
       clientSecret: keys.google.clientSecret,
     },
