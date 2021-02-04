@@ -13,10 +13,10 @@ passport.deserializeUser(function (id, done) {
 passport.use(
   new GoogleStrategy(
     {
-      clientID:
-        '971304540030-vr45mu6r1ldg2qhl5er5h92hopld6fad.apps.googleusercontent.com',
-      clientSecret: 'YVlrb8DpKbkqKco1t1AD-UHg',
-      callbackURL: 'https://radiant-ocean-11743.herokuapp.com/google/callback',
+      callbackURL:
+        'https://radiant-ocean-11743.herokuapp.com/auth/google/redirect',
+      clientID: keys.google.clientID,
+      clientSecret: keys.google.clientSecret,
     },
     function (accessToken, refreshToken, profile, done) {
       //use the profile info (mainly profile id)to check if the user is registerd in your db
