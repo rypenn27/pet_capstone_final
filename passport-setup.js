@@ -16,7 +16,7 @@ passport.use(
       clientID:
         '971304540030-vr45mu6r1ldg2qhl5er5h92hopld6fad.apps.googleusercontent.com',
       clientSecret: 'YVlrb8DpKbkqKco1t1AD-UHg',
-      callbackURL: 'http://localhost:3000/google/callback',
+      callbackURL: 'https://radiant-ocean-11743.herokuapp.com/google/callback',
     },
     function (accessToken, refreshToken, profile, done) {
       //use the profile info (mainly profile id)to check if the user is registerd in your db
