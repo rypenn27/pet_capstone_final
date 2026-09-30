@@ -1,70 +1,35 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 
-import { getPets } from '../api';
+// Searches by breed, name or color
+const Search = ({ onSearch }) => {
+  const [query, setQuery] = useState('');
 
-const Search = (props) => {
-  const pets = props.pets;
-  const setPets = props.setPets;
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onSearch(query.trim());
+  };
 
-  const [searchQuery, setSearchQuery] = useState('');
-  const [copyOfPets, setCopyOfPets] = useState([]);
-
-  useEffect(() => {
-    getPets()
-      .then((pets) => {
-        setCopyOfPets(pets);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }, []);
-
-  function petFilter(query) {
-    const filteredPets = [];
-    console.log('Error');
-    pets.map((pet) => {
-      let b = pet.breed;
-      let breed = b.toLowerCase();
-
-      let q = query.toLowerCase();
-      console.log('Error');
-      if (breed.split(' ').includes(q)) {
-        filteredPets.push(pet);
-        setPets(filteredPets);
-      }
-    });
-
-    return filteredPets;
-  }
+  const handleChange = (e) => {
+    setQuery(e.target.value);
+    if (e.target.value === '') onSearch('');
+  };
 
   return (
-    <>
-      <div className='searching'>
-        <Form.Control
-          className='search'
-          type='text'
-          value={searchQuery}
-          onChange={(e) => {
-            e.preventDefault();
-            setSearchQuery(e.target.value);
-            if (e.target.value === '') {
-              setPets(copyOfPets);
-            }
-          }}
-          placeholder='Search Breeds...'
-        />
-        <br />
-        <Button
-          className='searchButton'
-          variant='flat'
-          onClick={(e) => petFilter(searchQuery)}
-        >
-          Search <i className='fas fa-paw'></i>
-        </Button>
-      </div>
-    </>
+    <Form className='searching' onSubmit={handleSubmit}>
+      <Form.Control
+        className='search'
+        type='search'
+        value={query}
+        onChange={handleChange}
+        placeholder='Search by breed, name or color...'
+        aria-label='Search pets'
+      />
+      <Button type='submit' variant='brand' className='searchButton'>
+        Search <i className='fas fa-paw'></i>
+      </Button>
+    </Form>
   );
 };
 

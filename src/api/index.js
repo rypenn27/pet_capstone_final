@@ -1,283 +1,58 @@
 import axios from 'axios';
 
+const TOKEN_KEY = 'token';
 
-const axiosWithAuth = () => {
-  const token = `Bearer ${localStorage.getItem('token')}`;
-  return axios.create({ headers: { Authorization: token } });
-};
+export const getToken = () => localStorage.getItem(TOKEN_KEY);
+export const setToken = (token) =>
+  token ? localStorage.setItem(TOKEN_KEY, token) : localStorage.removeItem(TOKEN_KEY);
 
-export async function getPets() {
-  try {
-    const { data } = await axios.get('/api/pets');
-    return data;
-  } catch (error) {
-    throw error;
+const api = axios.create({ baseURL: '/api' });
+
+api.interceptors.request.use((config) => {
+  const token = getToken();
+  if (token) config.headers.Authorization = `Bearer ${token}`;
+  return config;
+});
+
+// Turns an axios error into the server's message
+export function errorMessage(error) {
+  if (error && error.response && error.response.data && error.response.data.error) {
+    return error.response.data.error;
   }
+  return 'Something went wrong. Please try again.';
 }
 
-// export async function getSomething() {
-//   try {
-//     const { data } = await axios.get('/api');
-//     return data;
-//   } catch (error) {
-//     throw error;
-//   }
-// }
+const data = (promise) => promise.then((res) => res.data);
 
+// Config
+export const getConfig = () => data(api.get('/config'));
 
-export async function getLogInfo() {
-  try {
-    const { data } = await axios.get('/api/login');
-    return data;
-  } catch (error) {
-    throw error;
-  }
-}
+// Auth
+export const register = (fields) => data(api.post('/register', fields));
+export const login = (username, password) =>
+  data(api.post('/login', { username, password }));
 
-// get users by id
-export async function getUserById(loginId) {
-  try {
-    const { data } = await axios.get(`/api/users/${loginId}`);
-    return data;
-  } catch (error) {
-    throw error;
-  }
-}
+// Pets
+export const getPets = (search = '') => data(api.get('/pets', { params: { search } }));
 
-// get pet by id > pets/petId route
-export async function getPetById(petId) {
-  try {
-    const { data } = await axios.get(`/api/pets/${petId}`);
-    return data;
-  } catch (error) {
-    throw error;
-  }
-}
+// Basket
+export const getCart = () => data(api.get('/cart'));
+export const addToCart = (petId) => data(api.post('/cart', { petId }));
+export const removeFromCart = (petId) => data(api.delete(`/cart/${petId}`));
 
-// get cart for user
-export async function getCart() {
-  try {
-    const { data } = await axiosWithAuth().get(`/api/cart`);
-    return data;
-  } catch (error) {
-    throw error;
-  }
-}
+// Account
+export const getAccount = () => data(api.get('/account'));
+export const updateProfile = (fields) => data(api.patch('/account', fields));
+export const saveBilling = (fields) => data(api.put('/account/billing', fields));
+export const createSetupIntent = () => data(api.post('/account/cards/setup-intent'));
+export const saveCard = (paymentMethodId) =>
+  data(api.post('/account/cards', { paymentMethodId }));
+export const setDefaultCard = (id) => data(api.patch(`/account/cards/${id}/default`));
+export const deleteCard = (id) => data(api.delete(`/account/cards/${id}`));
 
-// adds pet to cart
-export async function addToCart(loginId, petId) {
-  const dataToSend = {
-    loginId,
-    petId,
-  };
-  console.log('data send', dataToSend);
-  try {
-    if (dataToSend.loginId && dataToSend.petId.length > 0) {
-      /* console.log(dataToSend.loginId, dataToSend.productId.length); */
-      const { data } = await axiosWithAuth().patch(`/api/cart`, dataToSend);
-      return data;
-    }
-  } catch (error) {
-    throw error;
-  }
-}
-
-// creates user - register route/endpoint
-// login object fields required
-export async function createUser(username, email, password) {
-  const dataToSend = { username, email, password };
-  try {
-    if (
-      dataToSend.username.length > 0 &&
-      dataToSend.email.length > 0 &&
-      dataToSend.password.length > 0
-    ) {
-      const { data } = await axios.post(`/api/register`, dataToSend);
-      console.log(data);
-      return data;
-    }
-  } catch (error) {
-    console.dir(error);
-    throw error;
-  }
-}
-
-// user login
-export async function loginUser(username, password) {
-  const dataToSend = { username, password };
-  try {
-    if (dataToSend.username.length > 0 && dataToSend.password.length > 0) {
-      const { data } = await axios.post(`/api/login`, dataToSend);
-      return data;
-    }
-  } catch (error) {
-    throw error;
-  }
-}
-
-// Send the google data token to backend
-export async function sendGoogleData(googleData) {
-  console.log('gooogle data', googleData);
-  const token = googleData.tokenId;
-  const dataToSend = { token };
-  console.log('data send', dataToSend);
-  try {
-    if (dataToSend.token.length > 0) {
-      const { data } = await axios.post(`/api/google-login`, dataToSend);
-      console.log('login success');
-      return data;
-    }
-  } catch (error) {
-    throw error;
-  }
-}
-
-// google Login
-export async function loginGoogle() {
-  // const dataForGoogle = {}
-  console.log('in loginGoogle()');
-  try {
-    const { data } = await axios.get('api/googlelogin' /*, dataForGoogle*/);
-    console.log('in loginGoogle() api/index', data);
-    return data;
-  } catch (error) {
-    throw error;
-  }
-}
-
-// update user
-// user object fields are required
-export async function updateUser(username, email, password, loginId) {
-  const dataToSend = { username, email, password, loginId };
-  try {
-    // if (
-    //   dataToSend.username.length > 0 &&
-    //   dataToSend.email.length > 0 &&
-    //   dataToSend.password.length > 0
-    // )
-    // {}
-
-    const { data } = await axiosWithAuth().patch(
-      `/api/login/${loginId}/update`,
-      dataToSend
-    );
-    return data;
-  } catch (error) {
-    throw error;
-  }
-}
-
-export async function getRescueOrder() {
-  try {
-    const { data } = await axiosWithAuth().get('/api/RescueOrders');
-    return data;
-  } catch (error) {
-    throw error;
-  }
-}
-
-// get orders for logged in user
-export async function getRescueOrderById() {
-  try {
-    const { data } = await axiosWithAuth().get(`/api/RescueOrders`);
-    return data;
-  } catch (error) {
-    throw error;
-  }
-}
-
-export async function removeFromCart(loginId, petId) {
-  const dataToSend = {
-    loginId,
-    petId,
-  };
-  console.log('data send', dataToSend);
-  try {
-    if (dataToSend.loginId && dataToSend.petId) {
-      /* console.log(dataToSend.userId, dataToSend.productId.length); */
-      const { data } = await axiosWithAuth().patch(
-        `/api/cart/remove`,
-        dataToSend
-      );
-      return data;
-    }
-  } catch (error) {
-    throw error;
-  }
-}
-
-export async function addCount(id) {
-  const dataToSend = {
-    id,
-  };
-  console.log('data send', dataToSend);
-  try {
-    if (dataToSend.id) {
-      const { data } = await axiosWithAuth().patch(`/api/count`, dataToSend);
-      return data;
-    }
-  } catch (error) {
-    throw error;
-  }
-}
-
-export async function subtractCount(id) {
-  const dataToSend = {
-    id,
-  };
-  console.log('data send', dataToSend);
-  try {
-    if (dataToSend.id) {
-      const { data } = await axiosWithAuth().patch(
-        `/api/count/subtract`,
-        dataToSend
-      );
-      return data;
-    }
-  } catch (error) {
-    throw error;
-  }
-}
-
-export async function sendToken(total, token) {
-  const dataToSend = {
-    total,
-    token,
-  };
-
-  console.log('data send', dataToSend);
-  try {
-    if (dataToSend.total && dataToSend.token) {
-      const { data } = await axiosWithAuth().post(`/api/stripe`, dataToSend);
-      console.log('data1', data);
-      return data;
-    }
-  } catch (error) {
-    throw error;
-  }
-}
-
-export async function checkout(loginId, cartId) {
-  const dataToSend = { loginId, cartId };
-  console.log('data send', dataToSend);
-  try {
-    if (dataToSend.loginId && dataToSend.cartId) {
-      const { data } = await axios.post(`/api/checkout`, dataToSend);
-      console.log('data2', data);
-      return data;
-    }
-  } catch (error) {
-    throw error;
-  }
-}
-
-export async function checkOrdersAndCart(loginId) {
-  try {
-    console.log('the id in the api: ', loginId);
-    const { data } = await axiosWithAuth().get(`/api/orders/${loginId}`);
-    console.log('this is the data in api returned from the server: ', data);
-  } catch (error) {
-    throw error;
-  }
-}
-
+// Checkout and orders
+export const checkout = (cardId) => data(api.post('/checkout', { cardId }));
+export const completeCheckout = (paymentIntentId) =>
+  data(api.post('/checkout/complete', { paymentIntentId }));
+export const getOrders = () => data(api.get('/orders'));
+export const getOrder = (id) => data(api.get(`/orders/${id}`));

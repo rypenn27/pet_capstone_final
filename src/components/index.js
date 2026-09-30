@@ -1,6 +1,14 @@
 export { default as App } from './App';
-export { default as Cart } from './Cart';
 export { default as Header } from './Header';
-export { default as Login } from './Login';
-export { default as Search } from './Search';
 export { default as Home } from './Home';
+export { default as Search } from './Search';
+export { default as AdoptModal } from './AdoptModal';
+export { default as Login } from './Login';
+export { default as Signup } from './Signup';
+export { default as Account } from './Account';
+export { default as BillingForm } from './BillingForm';
+export { default as AddCardForm } from './AddCardForm';
+export { default as Cart } from './Cart';
+export { default as Checkout } from './Checkout';
+export { default as Orders } from './Orders';
+export { default as OrderDetail } from './OrderDetail';
